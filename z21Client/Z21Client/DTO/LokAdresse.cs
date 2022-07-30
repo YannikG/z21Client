@@ -14,7 +14,7 @@
 
 using System;
 
-namespace TrainDatabase.Z21Client.DTO
+namespace Z21Client.DTO
 {
     public class LokAdresse
     {

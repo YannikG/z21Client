@@ -1,5 +1,4 @@
-﻿using TrainDatabase.Z21Client.DTO;
-using TrainDatabase.Z21Client.Enums;
+﻿using Z21Client.Enums;
 
 namespace Z21Client.DTO
 {

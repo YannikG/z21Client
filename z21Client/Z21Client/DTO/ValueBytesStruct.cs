@@ -11,7 +11,7 @@
  * unter http://www.gnu.org/licenses/gpl.html.
  */
 
-namespace TrainDatabase.Z21Client.DTO
+namespace Z21Client.DTO
 {
     public struct ValueBytesStruct
     {

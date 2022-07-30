@@ -12,9 +12,9 @@
  * 
  */
 
-using TrainDatabase.Z21Client.Enums;
+using Z21Client.Enums;
 
-namespace TrainDatabase.Z21Client.DTO
+namespace Z21Client.DTO
 {
     public class HardwareInfo
     {

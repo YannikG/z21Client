@@ -13,7 +13,7 @@
  */
 using System.Collections.Generic;
 
-namespace TrainDatabase.Z21Client.DTO
+namespace Z21Client.DTO
 {
     public class LokInfoData
     {
