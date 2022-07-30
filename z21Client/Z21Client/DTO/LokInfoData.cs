@@ -11,7 +11,6 @@
  * unter http://www.gnu.org/licenses/gpl.html.
  * 
  */
-using Model;
 using System.Collections.Generic;
 
 namespace TrainDatabase.Z21Client.DTO

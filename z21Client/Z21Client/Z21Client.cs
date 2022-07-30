@@ -12,8 +12,6 @@
  * 
  */
 
-using Helper;
-using Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +23,7 @@ using System.Timers;
 using TrainDatabase.Z21Client.DTO;
 using TrainDatabase.Z21Client.Enums;
 using TrainDatabase.Z21Client.Events;
+using Z21Client.DTO;
 
 namespace TrainDatabase.Z21Client
 {
@@ -84,7 +83,7 @@ namespace TrainDatabase.Z21Client
                     PingClient.Enabled = false;
                     try
                     {
-                        ClientReachable = await Ping();
+                        ClientReachable = await Ping(clientIp);
                     }
                     catch (Exception ex)
                     {
@@ -96,7 +95,7 @@ namespace TrainDatabase.Z21Client
                     }
                 };
 
-                _ = Task.Run(async () => ClientReachable = await Ping());
+                _ = Task.Run(async () => ClientReachable = await Ping(clientIp));
                 Logger.LogInformation($"Z21 initialisiert.");
             }
             catch (Exception ex)
@@ -285,19 +284,15 @@ namespace TrainDatabase.Z21Client
 
         public void SetLocoDrive(LokInfoData data) => Senden(GetLocoDriveByteArray(data));
 
-        public void SetLocoFunction(int address, ToggleType toggelType)
-        {
-            byte[] bytes = GetLocoFunctionByteArray(new LokAdresse(address), toggelType);
-            Senden(bytes);
-        }
+        public void SetLocoFunction(FunctionData function) => Senden(GetLocoFunctionByteArray(function));
 
-        public void SetLocoFunction(List<(ToggleType toggle, FunctionModel Func)> data)
+        public void SetLocoFunction(List<FunctionData> data)
         {
             var array = new byte[10 * data.Count];
             for (int i = 0, currentIndex = 0; i < data.Count; i++, currentIndex += 10)
             {
-                (ToggleType toggleType, FunctionModel function) = data[i];
-                Array.Copy(GetLocoFunctionByteArray(new(function.Vehicle.Address), function, toggleType), 0, array, currentIndex, 10);
+                var func = data[i];
+                Array.Copy(GetLocoFunctionByteArray(func), 0, array, currentIndex, 10);
             }
             Senden(array);
         }
@@ -389,7 +384,7 @@ namespace TrainDatabase.Z21Client
             return bytes;
         }
 
-        private static byte[] GetLocoFunctionByteArray(LokAdresse adresse, ToggleType toggelType)
+        private static byte[] GetLocoFunctionByteArray(FunctionData function)
         {
             byte[] bytes = new byte[10];
             bytes[0] = 0x0A;
@@ -398,12 +393,12 @@ namespace TrainDatabase.Z21Client
             bytes[3] = 0;
             bytes[4] = 0xE4;
             bytes[5] = 0xF8;
-            bytes[6] = adresse.ValueBytes.Adr_MSB;
-            bytes[7] = adresse.ValueBytes.Adr_LSB;
-            bytes[8] = (byte)adresse.Value;
+            bytes[6] = function.LokAdresse.ValueBytes.Adr_MSB;
+            bytes[7] = function.LokAdresse.ValueBytes.Adr_LSB;
+            bytes[8] = (byte)function.LokAdresse.Value;
 
             var bitarray = new BitArray(new byte[] { bytes[8] });
-            switch (toggelType)
+            switch (function.ToggleType)
             {
                 case ToggleType.Off:
                     break;
@@ -416,7 +411,7 @@ namespace TrainDatabase.Z21Client
             }
             bitarray.CopyTo(bytes, 8);
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            Logger.LogByteArray($"SET LOCO FUNCTION ({adresse} - index: {adresse.Value} - {toggelType})", bytes);
+            Logger.LogByteArray($"SET LOCO FUNCTION ({function.LokAdresse.Value} - index: {function.FunctionAdress} - {function.ToggleType})", bytes);
             return bytes;
         }
 

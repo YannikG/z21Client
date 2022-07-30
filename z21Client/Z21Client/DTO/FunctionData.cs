@@ -8,9 +8,9 @@ using TrainDatabase.Z21Client.Enums;
 
 namespace Z21Client.DTO
 {
-    internal class FunctionData
+    public class FunctionData
     {
-        public int LokAdresse { get; set; }
+        public LokAdresse LokAdresse { get; set; } = new(-1);
 
         public int FunctionAdress { get; set; }
 
