@@ -24,6 +24,7 @@ using TrainDatabase.Z21Client.DTO;
 using TrainDatabase.Z21Client.Enums;
 using TrainDatabase.Z21Client.Events;
 using Z21Client.DTO;
+using Z21Client.Events;
 
 namespace TrainDatabase.Z21Client
 {
@@ -83,7 +84,7 @@ namespace TrainDatabase.Z21Client
                     PingClient.Enabled = false;
                     try
                     {
-                        ClientReachable = await Ping(clientIp);
+                        ClientReachable = await Ping();
                     }
                     catch (Exception ex)
                     {
@@ -95,7 +96,7 @@ namespace TrainDatabase.Z21Client
                     }
                 };
 
-                _ = Task.Run(async () => ClientReachable = await Ping(clientIp));
+                _ = Task.Run(async () => ClientReachable = await Ping());
                 LogInformation($"Z21 initialisiert.");
             }
             catch (Exception ex)
@@ -127,6 +128,8 @@ namespace TrainDatabase.Z21Client
         public event EventHandler<TrackPowerEventArgs> TrackPowerChanged = default!;
 
         public event EventHandler ClientReachabilityChanged = default!;
+
+        public event EventHandler<LogMessageEventArgs> LogMessage = default!;
 
         public IPAddress Address { get; } = default!;
 
@@ -267,10 +270,10 @@ namespace TrainDatabase.Z21Client
         /// Pings the client. 
         /// </summary>
         /// <returns>Returns true if the client is reachable. False if an error occurs. </returns>
-        public static async Task<bool> Ping(IPAddress clientIp)
+        public async Task<bool> Ping()
         {
             var ping = new System.Net.NetworkInformation.Ping();
-            var result = await ping.SendPingAsync(clientIp);
+            var result = await ping.SendPingAsync(Address);
             return result.Status == System.Net.NetworkInformation.IPStatus.Success;
         }
 
@@ -349,7 +352,7 @@ namespace TrainDatabase.Z21Client
             Senden(bytes);
         }
 
-        private static TrackPower GetCentralStateData(byte[] received)
+        private TrackPower GetCentralStateData(byte[] received)
         {
             TrackPower state = TrackPower.ON;
             bool isEmergencyStop = (received[6] & 0x01) == 0x01;
@@ -366,7 +369,7 @@ namespace TrainDatabase.Z21Client
             return state;
         }
 
-        private static byte[] GetLocoDriveByteArray(LokInfoData data)
+        private byte[] GetLocoDriveByteArray(LokInfoData data)
         {
             if (data.DrivingDirection) data.Speed |= 0x080;
             byte[] bytes = new byte[10];
@@ -384,7 +387,7 @@ namespace TrainDatabase.Z21Client
             return bytes;
         }
 
-        private static byte[] GetLocoFunctionByteArray(FunctionData function)
+        private byte[] GetLocoFunctionByteArray(FunctionData function)
         {
             byte[] bytes = new byte[10];
             bytes[0] = 0x0A;
@@ -517,7 +520,7 @@ namespace TrainDatabase.Z21Client
                     }
                     else
                     {
-                        LogByteArray($"RECEIVED INVALID LAN CODE", received);
+                        LogErrorByteArray($"RECEIVED INVALID LAN CODE", received);
                     }
                     break;
                 case 0x40:
@@ -666,5 +669,16 @@ namespace TrainDatabase.Z21Client
                 LogError(ex, "Fehler beim Senden");
             }
         }
+
+        #region Log
+        private void LogByteArray(string message, byte[] bytes) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Debug, $"{string.Join(" ", bytes.Select(e => $"{e:x2}"?.ToUpper()))} - {message}"));
+
+        private void LogErrorByteArray(string message, byte[] bytes) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Error, $"{string.Join(" ", bytes.Select(e => $"{e:x2}"?.ToUpper()))} - {message}"));
+
+        private void LogError(Exception exception, string? message = null) => LogMessage?.Invoke(this, new(LogLevel.Error, exception, message));
+
+        private void LogInformation(string message) => LogMessage?.Invoke(this, new(LogLevel.Info, message));
+
+        #endregion
     }
 }
