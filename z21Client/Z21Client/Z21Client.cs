@@ -77,7 +77,7 @@ namespace TrainDatabase.Z21Client
 
                 LogInformation($"UPD connection to {Address}:{Port} established.");
 
-                BeginReceive(new AsyncCallback(Empfang), null);
+                BeginReceive(new AsyncCallback(Receiving), null);
                 RenewClientSubscription.Elapsed += (a, b) => GetStatus();
                 PingClient.Elapsed += async (a, b) =>
                 {
@@ -157,7 +157,7 @@ namespace TrainDatabase.Z21Client
             bytes[5] = 0x0A;
             bytes[6] = 0xFB;
             LogDebug($"GET FIRMWARE VERSION", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void GetHardwareInfo()
@@ -168,7 +168,7 @@ namespace TrainDatabase.Z21Client
             bytes[2] = 0x1A;
             bytes[3] = 0;
             LogDebug($"GET HWINFO", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void GetLanCode()
@@ -179,7 +179,7 @@ namespace TrainDatabase.Z21Client
             bytes[2] = 0x18;
             bytes[3] = 0x00;
             LogDebug($"GET LAN CODE", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void GetLocoInfo(LokAdresse adresse)
@@ -196,7 +196,7 @@ namespace TrainDatabase.Z21Client
             bytes[7] = adresse.ValueBytes.Adr_LSB;
             bytes[8] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7]);
             LogDebug($"GET LOCO INFO  (#{adresse.Value})", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void GetSerialNumber()
@@ -207,7 +207,7 @@ namespace TrainDatabase.Z21Client
             bytes[2] = 0x10;
             bytes[3] = 0;
             LogDebug($"GET SERIAL NUMBER", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void GetStatus()
@@ -221,7 +221,7 @@ namespace TrainDatabase.Z21Client
             bytes[5] = 0x24;
             bytes[6] = 0x05;
             LogDebug($"GET STATUS", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void GetVersion()
@@ -236,7 +236,7 @@ namespace TrainDatabase.Z21Client
             //bytes[6] = 0x47;   // = XOR-Byte  selbst ausgerechnet, in der LAN-Doku steht 0 ?!
             bytes[6] = 0;
             LogDebug($"GET VERSION", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void LogOFF()
@@ -247,7 +247,7 @@ namespace TrainDatabase.Z21Client
             bytes[2] = 0x30;
             bytes[3] = 0x00;
             LogDebug("LOG OFF", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void LogOn()
@@ -263,7 +263,7 @@ namespace TrainDatabase.Z21Client
             bytes[6] = flags[2];
             bytes[7] = flags[3];
             LogDebug($"SET BROADCASTFLAGS", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         /// <summary>
@@ -282,12 +282,12 @@ namespace TrainDatabase.Z21Client
             var array = new byte[10 * data.Count];
             for (int i = 0, currentIndex = 0; i < data.Count; i++, currentIndex += 10)
                 Array.Copy(GetLocoDriveByteArray(data[i]), 0, array, currentIndex, 10);
-            Senden(array);
+            Sending(array);
         }
 
-        public void SetLocoDrive(LokInfoData data) => Senden(GetLocoDriveByteArray(data));
+        public void SetLocoDrive(LokInfoData data) => Sending(GetLocoDriveByteArray(data));
 
-        public void SetLocoFunction(FunctionData function) => Senden(GetLocoFunctionByteArray(function));
+        public void SetLocoFunction(FunctionData function) => Sending(GetLocoFunctionByteArray(function));
 
         public void SetLocoFunction(List<FunctionData> data)
         {
@@ -297,7 +297,7 @@ namespace TrainDatabase.Z21Client
                 var func = data[i];
                 Array.Copy(GetLocoFunctionByteArray(func), 0, array, currentIndex, 10);
             }
-            Senden(array);
+            Sending(array);
         }
 
         public void SetStop()
@@ -310,7 +310,7 @@ namespace TrainDatabase.Z21Client
             bytes[4] = 0x80;
             bytes[5] = 0x80;
             LogDebug($"SET STOP", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void SetTrackPowerOFF()
@@ -323,7 +323,7 @@ namespace TrainDatabase.Z21Client
             bytes[4] = 0x21;
             bytes[5] = 0x80;
             bytes[6] = 0xA1;
-            Senden(bytes);
+            Sending(bytes);
             LogDebug($"SET TRACK POWER OFF", bytes);
         }
 
@@ -338,7 +338,7 @@ namespace TrainDatabase.Z21Client
             bytes[5] = 0x81;
             bytes[6] = 0xA0;
             LogDebug($"SET TRACK POWER ON", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         public void SystemStateGetData()
@@ -349,7 +349,7 @@ namespace TrainDatabase.Z21Client
             bytes[2] = 0x85;
             bytes[3] = 0;
             LogDebug($"SYSTEMSTATE GETDATA", bytes);
-            Senden(bytes);
+            Sending(bytes);
         }
 
         private TrackPower GetCentralStateData(byte[] received)
@@ -463,13 +463,13 @@ namespace TrainDatabase.Z21Client
 
         }
 
-        private void Empfang(IAsyncResult res)
+        private void Receiving(IAsyncResult res)
         {
             try
             {
                 IPEndPoint RemoteIpEndPoint = null!;
                 byte[] received = EndReceive(res, ref RemoteIpEndPoint!);
-                BeginReceive(new AsyncCallback(Empfang), null);
+                BeginReceive(new AsyncCallback(Receiving), null);
                 OnReceive?.Invoke(this, new DataEventArgs(received));
                 LogTrace(received, "Received");
                 CutTelegramm(received);
@@ -653,7 +653,7 @@ namespace TrainDatabase.Z21Client
             }
         }
 
-        private async void Senden(byte[] bytes)
+        private async void Sending(byte[] bytes)
         {
             try
             {
