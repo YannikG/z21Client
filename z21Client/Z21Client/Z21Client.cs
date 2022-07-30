@@ -46,13 +46,13 @@ namespace Z21Client
                     LogInformation("Ping - Client reachable");
                     LogOn();
                     GetStatus();
-                    ClientReachabilityChanged?.Invoke(this, null!);
+                    ClientReachabilityChanged?.Invoke(this, clientReachable);
                     RenewClientSubscription.Enabled = true;
                 }
                 if (clientReachabletemp && !value)
                 {
                     LogInformation("Ping - Client unreachable");
-                    ClientReachabilityChanged?.Invoke(this, null!);
+                    ClientReachabilityChanged?.Invoke(this, clientReachable);
                     RenewClientSubscription.Enabled = false;
                 }
             }
@@ -125,7 +125,7 @@ namespace Z21Client
 
         public event EventHandler<TrackPowerEventArgs> TrackPowerChanged = default!;
 
-        public event EventHandler ClientReachabilityChanged = default!;
+        public event EventHandler<bool> ClientReachabilityChanged = default!;
 
         public event EventHandler<LogMessageEventArgs> LogMessage = default!;
 
