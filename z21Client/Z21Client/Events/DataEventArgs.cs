@@ -14,7 +14,7 @@
 
 using System;
 
-namespace TrainDatabase.Z21Client.Events
+namespace Z21Client.Events
 {
     public class DataEventArgs : EventArgs
     {

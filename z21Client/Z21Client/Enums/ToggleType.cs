@@ -12,7 +12,7 @@
  * 
  */
 
-namespace TrainDatabase.Z21Client.Enums
+namespace Z21Client.Enums
 {
     public enum ToggleType
     {

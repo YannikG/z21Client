@@ -20,13 +20,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
-using TrainDatabase.Z21Client.DTO;
-using TrainDatabase.Z21Client.Enums;
-using TrainDatabase.Z21Client.Events;
 using Z21Client.DTO;
+using Z21Client.Enums;
 using Z21Client.Events;
 
-namespace TrainDatabase.Z21Client
+namespace Z21Client
 {
     public class Z21Client : UdpClient
     {

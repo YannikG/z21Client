@@ -13,9 +13,9 @@
  */
 
 using System;
-using TrainDatabase.Z21Client.Enums;
+using Z21Client.Enums;
 
-namespace TrainDatabase.Z21Client.Events
+namespace Z21Client.Events
 {
     public class TrackPowerEventArgs : EventArgs
     {

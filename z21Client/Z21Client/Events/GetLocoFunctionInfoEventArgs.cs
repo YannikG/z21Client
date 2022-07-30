@@ -1,7 +1,7 @@
 ﻿using System;
-using TrainDatabase.Z21Client.DTO;
+using Z21Client.DTO;
 
-namespace TrainDatabase.Z21Client.Events
+namespace Z21Client.Events
 {
     public class GetLocoFunctionInfoEventArgs : EventArgs
     {
