@@ -515,12 +515,20 @@ namespace TrainDatabase.Z21Client
                 case 0x18:
                     if (Enum.IsDefined(typeof(LanCode), received[4]))
                     {
-                        LogByteArray($"GET LAN CODE ", received);
-                        OnGetLanCode?.Invoke(this, (LanCode)received[4]);
+                        var code = (LanCode)received[4];
+                        if (code is LanCode.z21StartLocked)
+                        {
+                            LogErrorByteArray($"GET LAN CODE '{code}'", received);
+                        }
+                        else
+                        {
+                            LogByteArray($"GET LAN CODE '{code}'", received);
+                        }
+                        OnGetLanCode?.Invoke(this, code);
                     }
                     else
                     {
-                        LogErrorByteArray($"RECEIVED INVALID LAN CODE", received);
+                        LogErrorByteArray($"GET LAN CODE RECEIVED INVALID LAN CODE", received);
                     }
                     break;
                 case 0x40:
