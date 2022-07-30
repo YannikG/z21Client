@@ -49,7 +49,7 @@ namespace Z21Client
                     ClientReachabilityChanged?.Invoke(this, clientReachable);
                     RenewClientSubscription.Enabled = true;
                 }
-                if (clientReachabletemp && !value)
+                else if (clientReachabletemp && !value)
                 {
                     LogInformation("Ping - Client unreachable");
                     ClientReachabilityChanged?.Invoke(this, clientReachable);
