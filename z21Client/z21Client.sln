@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "z21", "z21\z21.csproj", "{2019BBA1-3FF0-4147-B4D9-F40495B7EAB9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Z21Client", "Z21Client\Z21Client.csproj", "{A6BAE63F-5DBE-4AE7-B2C5-5CB89C25BA15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2019BBA1-3FF0-4147-B4D9-F40495B7EAB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2019BBA1-3FF0-4147-B4D9-F40495B7EAB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2019BBA1-3FF0-4147-B4D9-F40495B7EAB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2019BBA1-3FF0-4147-B4D9-F40495B7EAB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6BAE63F-5DBE-4AE7-B2C5-5CB89C25BA15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6BAE63F-5DBE-4AE7-B2C5-5CB89C25BA15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6BAE63F-5DBE-4AE7-B2C5-5CB89C25BA15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6BAE63F-5DBE-4AE7-B2C5-5CB89C25BA15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
