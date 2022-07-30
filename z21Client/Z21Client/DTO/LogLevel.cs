@@ -1,4 +1,4 @@
-﻿namespace Z21Client.DTO
+﻿namespace Z21.DTO
 {
     public enum LogLevel
     {

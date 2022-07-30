@@ -1,4 +1,4 @@
-﻿namespace Z21Client.Enums
+﻿namespace Z21.Enums
 {
     public enum TrackPower
     {

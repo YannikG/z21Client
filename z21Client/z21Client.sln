@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Z21Client", "Z21Client\Z21Client.csproj", "{A6BAE63F-5DBE-4AE7-B2C5-5CB89C25BA15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Z21", "Z21Client\Z21.csproj", "{A6BAE63F-5DBE-4AE7-B2C5-5CB89C25BA15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

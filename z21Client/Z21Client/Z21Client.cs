@@ -20,13 +20,13 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
-using Z21Client.DTO;
-using Z21Client.Enums;
-using Z21Client.Events;
+using Z21.DTO;
+using Z21.Enums;
+using Z21.Events;
 
-namespace Z21Client
+namespace Z21
 {
-    public class Z21Client : UdpClient
+    public class Client : UdpClient
     {
         public const int maxDccStep = 127;
         private bool clientReachable = false;
@@ -58,7 +58,7 @@ namespace Z21Client
             }
         }
 
-        public Z21Client(IPAddress clientIp, int clientPort, bool allowNatTraversal = true) : base(clientPort)
+        public Client(IPAddress clientIp, int clientPort, bool allowNatTraversal = true) : base(clientPort)
         {
             try
             {

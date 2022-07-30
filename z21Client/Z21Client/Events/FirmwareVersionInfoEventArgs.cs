@@ -13,9 +13,9 @@
  */
 
 using System;
-using Z21Client.DTO;
+using Z21.DTO;
 
-namespace Z21Client.Events
+namespace Z21.Events
 {
     public class FirmwareVersionInfoEventArgs : EventArgs
     {

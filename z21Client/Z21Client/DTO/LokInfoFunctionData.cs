@@ -1,6 +1,6 @@
-﻿using Z21Client.Enums;
+﻿using Z21.Enums;
 
-namespace Z21Client.DTO
+namespace Z21.DTO
 {
     public class LokInfoFunctionData
     {

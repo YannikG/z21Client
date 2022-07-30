@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Z21Client.DTO
+namespace Z21.DTO
 {
     public class LokAdresse
     {

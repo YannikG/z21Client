@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Z21Client.Events
+namespace Z21.Events
 {
     public class DataEventArgs : EventArgs
     {

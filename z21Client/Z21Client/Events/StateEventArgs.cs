@@ -13,9 +13,9 @@
  */
 
 using System;
-using Z21Client.Enums;
+using Z21.Enums;
 
-namespace Z21Client.Events
+namespace Z21.Events
 {
     public class StateEventArgs : EventArgs
     {

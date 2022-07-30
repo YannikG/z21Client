@@ -11,7 +11,7 @@
  * unter http://www.gnu.org/licenses/gpl.html.
  */
 
-namespace Z21Client.DTO
+namespace Z21.DTO
 {
     public struct ValueBytesStruct
     {
