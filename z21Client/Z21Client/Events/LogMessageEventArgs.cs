@@ -22,10 +22,10 @@ namespace Z21Client.Events
             LogLevel = logLevel;
         }
 
-        public Exception? Exception { get; set; } = default!;
+        public Exception? Exception { get; } = default!;
 
-        public string? Message { get; internal set; } = default!;
+        public string? Message { get; } = default!;
 
-        public LogLevel LogLevel { get; internal set; } = LogLevel.Info;
+        public LogLevel LogLevel { get; } = LogLevel.Info;
     }
 }
