@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Z21Client.DTO
 {
-    internal enum LogLevel
+    public enum LogLevel
     {
         /// <summary>
         /// Most verbose level.Used for development and seldom enabled in production.Ex.Request-payload, Response-payload, Begin-method-X or End-method-X
