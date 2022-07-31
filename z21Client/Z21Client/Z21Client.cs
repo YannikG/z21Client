@@ -132,7 +132,7 @@ namespace Z21
                 PingClient.Elapsed += PingClient_Elapsed;
 
                 PingClient.Enabled = true;
-                _ = Task.Run(async () => ClientReachable = await Ping());
+                _ = Task.Run(async () => ClientReachable = await PingAsync());
                 LogInformation($"Z21 initialisiert.");
             }
             catch (Exception ex)
@@ -282,7 +282,7 @@ namespace Z21
         /// Pings the client. 
         /// </summary>
         /// <returns>Returns true if the client is reachable. False if an error occurs. </returns>
-        public async Task<bool> Ping()
+        public async Task<bool> PingAsync()
         {
             var ping = new System.Net.NetworkInformation.Ping();
             var result = await ping.SendPingAsync(Address);
@@ -294,7 +294,7 @@ namespace Z21
             PingClient.Enabled = false;
             try
             {
-                ClientReachable = await Ping();
+                ClientReachable = await PingAsync();
             }
             catch (Exception ex)
             {
