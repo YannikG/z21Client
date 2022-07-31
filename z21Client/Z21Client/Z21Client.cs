@@ -99,7 +99,7 @@ namespace Z21
 
         private Timer PingClient { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 5).TotalMilliseconds, };
 
-        public async Task Connect(IPAddress clientIp, int clientPort, bool allowNatTraversal = true)
+        public void Connect(IPAddress clientIp, int clientPort, bool allowNatTraversal = true)
         {
             try
             {
@@ -111,39 +111,30 @@ namespace Z21
 
                 if (OperatingSystem.IsWindows())
                 {
-                    LogInformation($"Using NAT traversal: {allowNatTraversal}");
+                    LogDebug($"Using NAT traversal: {allowNatTraversal}");
 
                     AllowNatTraversal(allowNatTraversal);
+                }
+                else
+                {
+                    LogDebug($"Skipping NAT traversal usage. Operation system is not windows!");
                 }
 
                 Address = clientIp;
                 Port = clientPort;
+
                 base.Connect(Address, Port);
                 IsConnected = true;
+
                 LogInformation($"UPD connection to {Address}:{Port} established.");
 
                 BeginReceive(new AsyncCallback(Receiving), null);
 
                 RenewClientSubscription.Elapsed += (a, b) => GetStatus();
-                PingClient.Elapsed += async (a, b) =>
-                {
-                    PingClient.Enabled = false;
-                    try
-                    {
-                        ClientReachable = await Ping();
-                    }
-                    catch (Exception ex)
-                    {
-                        LogError(ex, "Error while pinging client.");
-                    }
-                    finally
-                    {
-                        PingClient.Enabled = true;
-                    }
-                };
+                PingClient.Elapsed += PingClient_Elapsed;
 
-                await Task.Run(async () => ClientReachable = await Ping());
                 PingClient.Enabled = true;
+                _ = Task.Run(async () => ClientReachable = await Ping());
                 LogInformation($"Z21 initialisiert.");
             }
             catch (Exception ex)
@@ -156,7 +147,7 @@ namespace Z21
         {
             LogOFF();
             Close();
-            IsConnected=false;
+            IsConnected = false;
             base.Dispose();
         }
 
@@ -289,6 +280,23 @@ namespace Z21
             var ping = new System.Net.NetworkInformation.Ping();
             var result = await ping.SendPingAsync(Address);
             return result.Status == System.Net.NetworkInformation.IPStatus.Success;
+        }
+
+        private async void PingClient_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            PingClient.Enabled = false;
+            try
+            {
+                ClientReachable = await Ping();
+            }
+            catch (Exception ex)
+            {
+                LogError(ex, "Error while pinging client.");
+            }
+            finally
+            {
+                PingClient.Enabled = true;
+            }
         }
 
         public void SetLocoDrive(List<LokInfoData> data)
@@ -701,6 +709,7 @@ namespace Z21
 
         #region Log
         private void LogDebug(string message, byte[] bytes) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Debug, ByteArryToString(bytes, message)));
+        private void LogDebug(string message) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Debug, message));
 
         private void LogWarning(string message, byte[] bytes) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Warn, ByteArryToString(bytes, message)));
         private void LogWarning(string message) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Warn, message));
