@@ -1,9 +1,16 @@
-﻿Z21
+#Z21
 ===
 
-Z21 ist eine in C# geschriebene Klasse, die das Protokoll der Kommunikation eines Clienten mit der digitalen Steuerzentrale Z21 oder z21 von Fleischmann/Roco implementiert. Basis ist das veröffentlichte Dokument [1]. Die Dokumentation der öffentlichen Methoden, Eigenschaften und Ereignisse sind zu finden im LokPower-Namespace der Website des Autor [2].
+z21Client is a lightweight C# client that facilitates communication with the digital control center z21/Z21 from Roco/Fleischmann. 
 
-[1] http://www.z21.eu/content/download/1119/12939/file/Z21_LAN_Protokoll%20V1.03.pdf (Stand April 2014)
+The basis for this implementation is the publicly available [`z21-lan-protokoll`](https://www.z21.eu/media/Kwc_Basic_DownloadTag_Component/47-1652-959-downloadTag/default/69bad87e/1646977660/z21-lan-protokoll.pdf) as published by Fleischmann/Roco. 
 
-[2] http://rentsch.dashosting.de/codepower/4.htm
+## Features
 
+Since this client partially implements the z21 protocol, only the following features are currently available:
+
+- TBD
+
+## Dependencies
+
+This implementation only uses features from the '.NetCore Framework' and does not rely on external dependencies. 
