@@ -99,7 +99,7 @@ namespace Z21
 
         private Timer PingClient { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 5).TotalMilliseconds, };
 
-        public void Connect(IPAddress clientIp, int clientPort, bool allowNatTraversal = true)
+        public void Connect(IPAddress clientIp, int clientPort, bool allowNatTraversal)
         {
             try
             {
@@ -142,6 +142,12 @@ namespace Z21
                 LogError(ex, "Fehler beim connecten zur Z21.");
             }
         }
+
+        public new void Connect(IPEndPoint endPoint) => Connect(endPoint.Address, endPoint.Port, true);
+
+        public new void Connect(string hostname, int port) => Connect(IPAddress.Parse(hostname), port, true);
+
+        public new void Connect(IPAddress addr, int port) => Connect(addr, port, true);
 
         public new void Dispose()
         {
