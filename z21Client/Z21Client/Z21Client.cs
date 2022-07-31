@@ -30,6 +30,7 @@ namespace Z21
     {
         public const int maxDccStep = 127;
         private bool clientReachable = false;
+        public const int port = 21105;
 
         /// <summary>
         /// True if the z21 client is reachable via icmp ping. False if not reachable.
@@ -58,7 +59,7 @@ namespace Z21
             }
         }
 
-        public Client()
+        public Client() : base(port)
         {
 
         }
@@ -91,15 +92,13 @@ namespace Z21
 
         public IPAddress Address { get; private set; } = default!;
 
-        public int Port { get; private set; } = default!;
-
         public bool IsConnected { get; private set; } = false;
 
         private Timer RenewClientSubscription { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 50).TotalMilliseconds, };
 
         private Timer PingClient { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 5).TotalMilliseconds, };
 
-        public void Connect(IPAddress clientIp, int clientPort, bool allowNatTraversal)
+        public void Connect(IPAddress clientIp, bool allowNatTraversal = true)
         {
             try
             {
@@ -121,12 +120,11 @@ namespace Z21
                 }
 
                 Address = clientIp;
-                Port = clientPort;
 
-                base.Connect(Address, Port);
+                base.Connect(Address, port);
                 IsConnected = true;
 
-                LogInformation($"UPD connection to {Address}:{Port} established.");
+                LogInformation($"UPD connection to {Address}:{port} established.");
 
                 BeginReceive(new AsyncCallback(Receiving), null);
 
@@ -143,11 +141,14 @@ namespace Z21
             }
         }
 
-        public new void Connect(IPEndPoint endPoint) => Connect(endPoint.Address, endPoint.Port, true);
+        [Obsolete("This method overload is not supported.", true)]
+        public new void Connect(IPEndPoint endPoint) { }
 
-        public new void Connect(string hostname, int port) => Connect(IPAddress.Parse(hostname), port, true);
+        [Obsolete("This method overload is not supported.", true)]
+        public new void Connect(string hostname, int port) { }
 
-        public new void Connect(IPAddress addr, int port) => Connect(addr, port, true);
+        [Obsolete("This method overload is not supported.", true)]
+        public new void Connect(IPAddress addr, int port) { }
 
         public new void Dispose()
         {
@@ -708,7 +709,7 @@ namespace Z21
             catch (Exception ex)
             {
                 if (ex is SocketException)
-                    Client.BeginConnect(Address, Port, new AsyncCallback(EndConnect), null);
+                    Client.BeginConnect(Address, port, new AsyncCallback(EndConnect), null);
                 LogError(ex, "Fehler beim Senden");
             }
         }
