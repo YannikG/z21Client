@@ -511,9 +511,10 @@ namespace Z21
 
         private void EndConnect(IAsyncResult res)
         {
-            LogInformation($"Reconnection abgeschlossen");
             LogOFF();
             Client.EndConnect(res);
+            IsConnected = false;
+            LogInformation($"Reconnection abgeschlossen");
         }
 
         private void Evaluation(byte[] received)
