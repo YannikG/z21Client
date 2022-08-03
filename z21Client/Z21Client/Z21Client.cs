@@ -123,8 +123,7 @@ namespace Z21
 
                 base.Connect(Address, port);
                 IsConnected = true;
-
-                LogInformation($"UPD connection to {Address}:{port} established.");
+                LogDebug($"UPD connection to {Address}:{port} established.");
 
                 BeginReceive(new AsyncCallback(Receiving), null);
 
