@@ -471,11 +471,10 @@ namespace Z21
         {
             if (bytes == null) return;
             int z = 0;
-            int length = 0;
             int max = bytes.GetLength(0);
             while (z < max)
             {
-                length = bytes[z];
+                int length = bytes[z];
                 if (length > 3 & z + length <= max)
                 {
                     byte[] einzelbytes = new byte[length];
