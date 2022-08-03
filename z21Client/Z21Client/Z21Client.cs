@@ -26,7 +26,7 @@ using Z21.Events;
 
 namespace Z21
 {
-    public class Client : UdpClient
+    public sealed class Client
     {
         public const int maxDccStep = 127;
         private bool clientReachable = false;
@@ -59,7 +59,7 @@ namespace Z21
             }
         }
 
-        public Client() : base(port)
+        public Client()
         {
 
         }
@@ -90,6 +90,11 @@ namespace Z21
 
         public event EventHandler<LogMessageEventArgs> LogMessage = default!;
 
+        /// <summary>
+        /// Underlying udp client which facilitates the communication with the z21.
+        /// </summary>
+        private UdpClient UdpClient { get; } = new(port);
+
         public IPAddress Address { get; private set; } = default!;
 
         public bool IsConnected { get; private set; } = false;
@@ -112,7 +117,7 @@ namespace Z21
                 {
                     LogDebug($"Using NAT traversal: {allowNatTraversal}");
 
-                    AllowNatTraversal(allowNatTraversal);
+                    UdpClient.AllowNatTraversal(allowNatTraversal);
                 }
                 else
                 {
@@ -121,11 +126,11 @@ namespace Z21
 
                 Address = clientIp;
 
-                base.Connect(Address, port);
+                UdpClient.Connect(Address, port);
                 IsConnected = true;
                 LogDebug($"UPD connection to {Address}:{port} established.");
 
-                BeginReceive(new AsyncCallback(Receiving), null);
+                UdpClient.BeginReceive(new AsyncCallback(Receiving), null);
 
                 RenewClientSubscription.Elapsed += (a, b) => GetStatus();
                 PingClient.Elapsed += PingClient_Elapsed;
@@ -140,21 +145,12 @@ namespace Z21
             }
         }
 
-        [Obsolete("This method overload is not supported.", true)]
-        public new void Connect(IPEndPoint endPoint) { }
-
-        [Obsolete("This method overload is not supported.", true)]
-        public new void Connect(string hostname, int port) { }
-
-        [Obsolete("This method overload is not supported.", true)]
-        public new void Connect(IPAddress addr, int port) { }
-
-        public new void Dispose()
+        public void Dispose()
         {
             LogOFF();
-            Close();
+            UdpClient.Close();
             IsConnected = false;
-            base.Dispose();
+            UdpClient.Dispose();
         }
 
         public void GetFirmwareVersion()
@@ -495,8 +491,8 @@ namespace Z21
             try
             {
                 IPEndPoint RemoteIpEndPoint = null!;
-                byte[] received = EndReceive(res, ref RemoteIpEndPoint!);
-                BeginReceive(new AsyncCallback(Receiving), null);
+                byte[] received = UdpClient.EndReceive(res, ref RemoteIpEndPoint!);
+                UdpClient.BeginReceive(new AsyncCallback(Receiving), null);
                 OnReceive?.Invoke(this, new DataEventArgs(received));
                 LogTrace(received, "Received");
                 CutTelegramm(received);
@@ -510,7 +506,7 @@ namespace Z21
         private void EndConnect(IAsyncResult res)
         {
             LogOFF();
-            Client.EndConnect(res);
+            UdpClient.Client.EndConnect(res);
             IsConnected = false;
             LogInformation($"Reconnection abgeschlossen");
         }
@@ -690,7 +686,7 @@ namespace Z21
                     throw new InvalidOperationException("Client not connected!");
                 }
 
-                await SendAsync(bytes, bytes?.GetLength(0) ?? 0);
+                await UdpClient.SendAsync(bytes, bytes?.GetLength(0) ?? 0);
                 LogTrace(bytes, "Sended");
             }
             catch (ArgumentNullException ex)
@@ -708,7 +704,7 @@ namespace Z21
             catch (Exception ex)
             {
                 if (ex is SocketException)
-                    Client.BeginConnect(Address, port, new AsyncCallback(EndConnect), null);
+                    UdpClient.Client.BeginConnect(Address, port, new AsyncCallback(EndConnect), null);
                 LogError(ex, "Fehler beim Senden");
             }
         }
