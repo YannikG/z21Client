@@ -107,6 +107,11 @@ namespace Z21
         {
             try
             {
+                if (clientIp is null)
+                {
+                    throw new NullReferenceException($"Object reference not set to an instance of an object.");
+                }
+
                 if (IsConnected)
                 {
                     LogWarning("Skipping connect! Client already connected. ");
