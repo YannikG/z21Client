@@ -103,7 +103,7 @@ namespace Z21
 
         private Timer PingClient { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 5).TotalMilliseconds, };
 
-        public void Connect(IPAddress clientIp, bool allowNatTraversal = true)
+        public void Connect(IPAddress clientIp)
         {
             try
             {
@@ -120,13 +120,7 @@ namespace Z21
 
                 if (OperatingSystem.IsWindows())
                 {
-                    LogDebug($"Using NAT traversal: {allowNatTraversal}");
-
-                    UdpClient.AllowNatTraversal(allowNatTraversal);
-                }
-                else
-                {
-                    LogDebug($"Skipping NAT traversal usage. Operation system is not windows!");
+                    UdpClient.AllowNatTraversal(true);
                 }
 
                 Address = clientIp;
