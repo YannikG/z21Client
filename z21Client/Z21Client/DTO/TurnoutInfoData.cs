@@ -22,23 +22,23 @@ namespace Z21.DTO
         public TurnoutInfoData(int adresse, Position state)
         {
             Adresse = new(adresse);
-            State = state;
+            Position = state;
         }
 
         public TurnoutInfoData(long adresse, Position state)
         {
             Adresse = new(adresse);
-            State = state;
+            Position = state;
         }
 
         public TurnoutInfoData(TurnoutAdresse adresse, Position state)
         {
             Adresse = adresse;
-            State = state;
+            Position = state;
         }
 
         public TurnoutAdresse Adresse { get; private set; }
 
-        public Position State { get; private set; }
+        public Position Position { get; private set; }
     }
 }
