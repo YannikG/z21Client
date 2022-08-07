@@ -443,7 +443,7 @@ namespace Z21
             }
             bitarray.CopyTo(bytes, 8);
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            LogDebug($"SET LOCO FUNCTION ({function.LokAdresse.Value} - index: {function.FunctionAdress} - {function.ToggleType})", bytes);
+            LogDebug($"SET LOCO FUNCTION (lokAdress: {function.LokAdresse.Value}; functionAdress: {function.FunctionAdress} - {function.ToggleType})", bytes);
             return bytes;
         }
 
