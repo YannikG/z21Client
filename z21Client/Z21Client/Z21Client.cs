@@ -427,7 +427,7 @@ namespace Z21
             bytes[5] = 0xF8;
             bytes[6] = function.LokAdresse.ValueBytes.Adr_MSB;
             bytes[7] = function.LokAdresse.ValueBytes.Adr_LSB;
-            bytes[8] = (byte)function.LokAdresse.Value;
+            bytes[8] = (byte)function.FunctionAdress;
 
             var bitarray = new BitArray(new byte[] { bytes[8] });
             switch (function.ToggleType)
