@@ -14,9 +14,9 @@
 
 namespace Z21.Enums
 {
-    public enum State
+    public enum Position
     {
-        Off = 00,
-        On = 01,
+        P0 = 0,
+        P1 = 1,
     }
 }
