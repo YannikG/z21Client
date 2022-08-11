@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using Z21.DTO;
 
 namespace Z21.Events
@@ -22,6 +23,6 @@ namespace Z21.Events
 
         public string? Message { get; } = default!;
 
-        public LogLevel LogLevel { get; } = LogLevel.Info;
+        public LogLevel LogLevel { get; } = LogLevel.Information;
     }
 }

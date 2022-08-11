@@ -12,6 +12,7 @@
  * 
  */
 
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -763,12 +764,12 @@ namespace Z21
         private void LogDebug(string message, byte[] bytes) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Debug, ByteArryToString(bytes, message)));
         private void LogDebug(string message) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Debug, message));
 
-        private void LogWarning(string message, byte[] bytes) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Warn, ByteArryToString(bytes, message)));
-        private void LogWarning(string message) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Warn, message));
+        private void LogWarning(string message, byte[] bytes) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Warning, ByteArryToString(bytes, message)));
+        private void LogWarning(string message) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Warning, message));
 
         private void LogError(Exception exception, string? message = null) => LogMessage?.Invoke(this, new(LogLevel.Error, exception, message));
 
-        private void LogInformation(string message) => LogMessage?.Invoke(this, new(LogLevel.Info, message));
+        private void LogInformation(string message) => LogMessage?.Invoke(this, new(LogLevel.Information, message));
 
         private void LogTrace(byte[]? bytes, string? message = null) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Trace, ByteArryToString(bytes, message)));
 
