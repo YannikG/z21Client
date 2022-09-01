@@ -4,6 +4,14 @@
     <TargetFramework>net5.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Title>z21 Client</Title>
+    <Authors>JEichberger</Authors>
+    <Description>z21Client partially implements the z21 lan protocoll for the digital command center z21/Z21 from Roco/Fleischmann.</Description>
+    <PackageProjectUrl></PackageProjectUrl>
+    <Copyright>MIT Licence </Copyright>
+    <RepositoryUrl>https://github.com/Jakob-Eichberger/z21Client</RepositoryUrl>
+    <PackageTags>z21;Roco;Fleischman</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
