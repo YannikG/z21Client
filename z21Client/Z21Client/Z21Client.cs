@@ -229,7 +229,7 @@ namespace Z21
             bytes[4] = 0x43;
             bytes[5] = address.ValueBytes.Adr_MSB;
             bytes[6] = address.ValueBytes.Adr_LSB;
-            bytes[7] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6]);
+            bytes[7] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
             LogDebug($"Get Turnout Info: address: {address.Value:D3}");
             Sending(bytes);
         }
@@ -488,7 +488,7 @@ namespace Z21
             bytes[5] = data.Adresse.ValueBytes.Adr_MSB;
             bytes[6] = data.Adresse.ValueBytes.Adr_LSB;
             array.CopyTo(bytes, 7);
-            bytes[8] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7]);
+            bytes[8] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
             LogDebug($"Set Turnout: address: {data.Adresse.Value}, state: {data.Position}, active: {active}, use queue: {UseTurnoutQueue}");
             return bytes;
         }
