@@ -19,19 +19,19 @@ namespace Z21.DTO
     public class TurnoutInfoData
     {
 
-        public TurnoutInfoData(int adresse, Position state)
+        public TurnoutInfoData(int adresse, State state)
         {
             Adresse = new(adresse);
             State = state;
         }
 
-        public TurnoutInfoData(long adresse, Position state)
+        public TurnoutInfoData(long adresse, State state)
         {
             Adresse = new(adresse);
             State = state;
         }
 
-        public TurnoutInfoData(TurnoutAdresse adresse, Position state)
+        public TurnoutInfoData(TurnoutAdresse adresse, State state)
         {
             Adresse = adresse;
             State = state;
@@ -39,6 +39,6 @@ namespace Z21.DTO
 
         public TurnoutAdresse Adresse { get; private set; }
 
-        public Position State { get; private set; }
+        public State State { get; private set; }
     }
 }
