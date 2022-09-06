@@ -31,7 +31,6 @@ namespace Z21
     {
         public const int maxDccStep = 127;
         private bool clientReachable = false;
-        private bool useTurnoutQueue = true;
         public const int port = 21105;
 
         /// <summary>
@@ -104,18 +103,6 @@ namespace Z21
         private Timer RenewClientSubscription { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 50).TotalMilliseconds, };
 
         private Timer PingClient { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 5).TotalMilliseconds, };
-
-        public bool UseTurnoutQueue
-        {
-            get => useTurnoutQueue; set
-            {
-                if (IsConnected)
-                {
-                    throw new InvalidOperationException("Setting this property while the z21 is connected is not allowed!");
-                }
-                useTurnoutQueue = value;
-            }
-        }
 
         public void Connect(IPAddress clientIp)
         {
@@ -216,21 +203,6 @@ namespace Z21
             bytes[7] = adresse.ValueBytes.Adr_LSB;
             bytes[8] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7]);
             LogDebug($"GET LOCO INFO  (#{adresse.Value})", bytes);
-            Sending(bytes);
-        }
-
-        public void GetTurnoutInfo(TurnoutAdresse address)
-        {
-            byte[] bytes = new byte[8];
-            bytes[0] = 0x08;
-            bytes[1] = 0;
-            bytes[2] = 0x40;
-            bytes[3] = 0;
-            bytes[4] = 0x43;
-            bytes[5] = address.ValueBytes.Adr_MSB;
-            bytes[6] = address.ValueBytes.Adr_LSB;
-            bytes[7] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            LogDebug($"Get Turnout Info: address: {address.Value:D3}");
             Sending(bytes);
         }
 
@@ -352,8 +324,6 @@ namespace Z21
             Sending(array);
         }
 
-        public void SetTurnout(TurnoutInfoData data, bool active = false) => Sending(GetTurnoutByteArray(data, active));
-
         public void SetStop()
         {
             byte[] bytes = new byte[6];
@@ -469,27 +439,6 @@ namespace Z21
             bitarray.CopyTo(bytes, 8);
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
             LogDebug($"SET LOCO FUNCTION (lokAdress: {function.LokAdresse.Value}; functionAdress: {function.FunctionAdress} - {function.ToggleType})", bytes);
-            return bytes;
-        }
-
-        private byte[] GetTurnoutByteArray(TurnoutInfoData data, bool active = false)
-        {
-            int q = UseTurnoutQueue ? 1 : 0;
-            int a = active ? 1 : 0;
-            int p = (int)data.Position;
-            BitArray array = new(new int[] { 1, 0, q, 0, a, 0, 0, p });
-
-            byte[] bytes = new byte[9];
-            bytes[0] = 0x09;
-            bytes[1] = 0;
-            bytes[2] = 0x40;
-            bytes[3] = 0;
-            bytes[4] = 0x53;
-            bytes[5] = data.Adresse.ValueBytes.Adr_MSB;
-            bytes[6] = data.Adresse.ValueBytes.Adr_LSB;
-            array.CopyTo(bytes, 7);
-            bytes[8] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            LogDebug($"Set Turnout: address: {data.Adresse.Value}, state: {data.Position}, active: {active}, use queue: {UseTurnoutQueue}");
             return bytes;
         }
 
