@@ -451,6 +451,7 @@ namespace Z21
             statedata.ProgCurrent = (received[6]) + received[7];
             statedata.FilteredMainCurrent = (received[8]) + received[9];
             statedata.Temperature = (received[10]) + received[11];
+            //VCCVoltage and SupplyVoltage are not read since their values do not make any sense! They jump from ~100 to nearly 300 at random.
             //statedata.SupplyVoltage = (received[12]) + received[13];
             //statedata.VCCVoltage =(received[14]) + received[15];
 
