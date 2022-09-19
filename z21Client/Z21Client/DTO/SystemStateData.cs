@@ -34,5 +34,15 @@ namespace Z21.DTO
         public int Temperature { get; set; } = -1;
 
         public int VCCVoltage { get; set; } = -1;
+
+        public override string? ToString()
+        {
+            return $"MainCurrent: \t\t{MainCurrent} mA\n" +
+                   $"ProgCurrent: \t\t{ProgCurrent} ma\n" +
+                   $"FilteredMainCurrent:\t{FilteredMainCurrent} mA\n" +
+                   $"Temperature: \t\t{Temperature} °C\n" +
+                   $"SupplyVoltage: \t\t{SupplyVoltage} mV\n" +
+                   $"VCCVoltage: \t\t\t{VCCVoltage} mV\n";
+        }
     }
 }
