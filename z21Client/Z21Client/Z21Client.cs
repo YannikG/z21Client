@@ -661,6 +661,9 @@ namespace Z21
                                     break;
                             }
                             break;
+                        case 0x82:
+                            LogError($"UNKNOWN COMMAND");
+                            break;
                         default:
                             LogDebug($"Unbekanntes X-Bus-Telegramm ", received);
                             break;
@@ -717,6 +720,7 @@ namespace Z21
         private void LogWarning(string message) => LogMessage?.Invoke(this, new LogMessageEventArgs(LogLevel.Warning, message));
 
         private void LogError(Exception exception, string? message = null) => LogMessage?.Invoke(this, new(LogLevel.Error, exception, message));
+        private void LogError(string? message = null) => LogMessage?.Invoke(this, new(LogLevel.Error, message));
 
         private void LogInformation(string message) => LogMessage?.Invoke(this, new(LogLevel.Information, message));
 
