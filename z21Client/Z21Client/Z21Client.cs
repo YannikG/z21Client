@@ -18,6 +18,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
@@ -443,15 +444,16 @@ namespace Z21
             return bytes;
         }
 
-        private static SystemStateData GetSystemStateData(byte[] received)
+        private SystemStateData GetSystemStateData(byte[] received)
         {
             SystemStateData statedata = new SystemStateData();
-            statedata.MainCurrent = (received[4] << 8) + received[5];
-            statedata.ProgCurrent = (received[6] << 8) + received[7];
-            statedata.FilteredMainCurrent = (received[8] << 8) + received[9];
-            statedata.Temperature = (received[10] << 8) + received[11];
-            statedata.SupplyVoltage = (received[12] << 8) + received[13];
-            statedata.VCCVoltage = (received[14] << 8) + received[15];
+            statedata.MainCurrent = (received[4]) + received[5];
+            statedata.ProgCurrent = (received[6]) + received[7];
+            statedata.FilteredMainCurrent = (received[8]) + received[9];
+            statedata.Temperature = (received[10]) + received[11];
+            //statedata.SupplyVoltage = (received[12]) + received[13];
+            //statedata.VCCVoltage =(received[14]) + received[15];
+
             statedata.ClientData.EmergencyStop = (received[16] & 0x01) == 0x01;
             statedata.ClientData.TrackVoltageOff = (received[16] & 0x02) == 0x02;
             statedata.ClientData.ShortCircuit = (received[16] & 0x04) == 0x04;
