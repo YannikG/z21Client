@@ -121,6 +121,7 @@ namespace Z21
 
                 if (OperatingSystem.IsWindows())
                 {
+                    LogInformation("Allowing NAT traversal");
                     UdpClient.AllowNatTraversal(true);
                 }
 
