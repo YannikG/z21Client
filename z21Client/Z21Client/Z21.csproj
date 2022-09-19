@@ -12,6 +12,7 @@
     <Copyright>MIT Licence </Copyright>
     <RepositoryUrl>https://github.com/Jakob-Eichberger/z21Client</RepositoryUrl>
     <PackageTags>z21;Roco;Fleischman</PackageTags>
+    <Configurations>Debug</Configurations>
   </PropertyGroup>
 
   <ItemGroup>
