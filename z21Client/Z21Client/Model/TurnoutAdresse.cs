@@ -14,7 +14,7 @@
 
 using System;
 
-namespace Z21.DTO
+namespace Z21.Model
 {
     public class TurnoutAdresse
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using Z21.DTO;
+using Z21.Model;
 
 namespace Z21.Events
 {

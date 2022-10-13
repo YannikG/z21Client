@@ -12,7 +12,7 @@
  * 
  */
 
-namespace Z21.DTO
+namespace Z21.Model
 {
     public class Z21ClientData
     {

@@ -25,6 +25,7 @@ using System.Timers;
 using Z21.DTO;
 using Z21.Enums;
 using Z21.Events;
+using Z21.Model;
 
 namespace Z21
 {

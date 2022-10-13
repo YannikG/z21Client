@@ -13,7 +13,7 @@
  */
 using System.Collections.Generic;
 
-namespace Z21.DTO
+namespace Z21.Model
 {
     public class LokInfoData
     {
