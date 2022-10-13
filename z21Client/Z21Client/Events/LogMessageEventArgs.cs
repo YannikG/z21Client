@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
-using Z21.DTO;
 
 namespace Z21.Events
 {

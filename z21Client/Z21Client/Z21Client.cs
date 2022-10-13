@@ -22,7 +22,6 @@ using System.Net.Security;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using System.Timers;
-using Z21.DTO;
 using Z21.Enums;
 using Z21.Events;
 using Z21.Model;
