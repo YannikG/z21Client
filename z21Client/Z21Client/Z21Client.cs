@@ -523,17 +523,16 @@ namespace Z21
             {
                 case 0x1A:
                     LogDebug($"GET HWINFO ", received);
-                    HardwareTyp hardwareTyp;
                     i = (received[7] << 24) + (received[6] << 16) + (received[5] << 8) + received[4];
                     j = (received[11] << 24) + (received[10] << 16) + (received[9] << 8) + received[8];
-                    switch (i)
+                    var hardwareTyp = i switch
                     {
-                        case 0x00000200: hardwareTyp = HardwareTyp.Z21Old; break;
-                        case 0x00000201: hardwareTyp = HardwareTyp.Z21New; break;
-                        case 0x00000202: hardwareTyp = HardwareTyp.SmartRail; break;
-                        case 0x00000203: hardwareTyp = HardwareTyp.z21Small; break;
-                        default: hardwareTyp = HardwareTyp.None; break;
-                    }
+                        0x00000200 => HardwareTyp.Z21Old,
+                        0x00000201 => HardwareTyp.Z21New,
+                        0x00000202 => HardwareTyp.SmartRail,
+                        0x00000203 => HardwareTyp.z21Small,
+                        _ => HardwareTyp.None,
+                    };
                     OnGetHardwareInfo?.Invoke(this, new HardwareInfoEventArgs(new HardwareInfo(hardwareTyp, j)));
                     break;
                 case 0x10:
