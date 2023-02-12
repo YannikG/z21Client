@@ -196,7 +196,7 @@ namespace Z21
             bytes[6] = adresse.ValueBytes.Adr_MSB;
             bytes[7] = adresse.ValueBytes.Adr_LSB;
             bytes[8] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7]);
-            Log.Logger.ForContext("data", bytes).Information($"GET LOCO INFO  (#{adresse.Value})");
+            Log.Logger.ForContext("data", bytes).Information($"Get loco info for adresse {adresse.Value}");
             Sending(bytes);
         }
 
@@ -383,7 +383,7 @@ namespace Z21
                 state = TrackPower.Short;
             else if (isProgrammingModeActive)
                 state = TrackPower.Programing;
-            Log.Logger.ForContext("data", received).Information($"STATUS CHANGED");
+            Log.Logger.ForContext("data", received).Information($"Status changed to {state}");
             return state;
         }
 
@@ -401,7 +401,7 @@ namespace Z21
             bytes[7] = data.Adresse.ValueBytes.Adr_LSB;
             bytes[8] = (byte)data.Speed;
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            Log.Logger.ForContext("data", bytes).Information($"SET LOCO DRIVE");
+            Log.Logger.ForContext("data", bytes).Information($"Set loco {data.Adresse.Value} drive to speed {data.Speed} with direction {data.DrivingDirection}");
             return bytes;
         }
 
@@ -432,7 +432,7 @@ namespace Z21
             }
             bitarray.CopyTo(bytes, 8);
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            Log.Logger.ForContext("data", bytes).Information($"SET LOCO FUNCTION");
+            Log.Logger.ForContext("data", bytes).Information($"Set loco {function.LokAdresse.Value} function {function.FunctionAdress} to {function.ToggleType}");
             return bytes;
         }
 
@@ -490,7 +490,7 @@ namespace Z21
                 byte[] received = UdpClient.EndReceive(res, ref RemoteIpEndPoint!);
                 UdpClient.BeginReceive(new AsyncCallback(Receiving), null);
                 OnReceive?.Invoke(this, new DataEventArgs(received));
-                Log.Logger.ForContext("data", received).Debug("Received data from the z21.");
+                Log.Logger.ForContext("data", received).Debug($"Received data from the z21: {BitConverter.ToString(received)}");
                 CutTelegramm(received);
             }
             catch (Exception ex)
@@ -633,7 +633,7 @@ namespace Z21
                                 }
                             }
                             OnGetLocoInfo?.Invoke(this, new GetLocoInfoEventArgs(infodata));
-                            Log.Logger.ForContext("data", received).Information($"GET LOCO DRIVE");
+                            Log.Logger.ForContext("data", received).Information($"Get loco {infodata.Adresse.Value} drive with speed {infodata.Speed} with direction {infodata.DrivingDirection}");
                             break;
                         case 0xF3:
                             switch (received[5])
@@ -667,7 +667,7 @@ namespace Z21
         private async void Sending(byte[] bytes)
         {
             await UdpClient.SendAsync(bytes, bytes?.GetLength(0) ?? 0);
-            Log.Logger.ForContext("data", bytes).Debug($"Sending data to the z21");
+            Log.Logger.ForContext("data", bytes).Debug($"Sending data to the z21: {BitConverter.ToString(bytes)}");
         }
     }
 }
