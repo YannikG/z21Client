@@ -21,6 +21,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 using Z21.Enums;
@@ -47,7 +48,7 @@ namespace Z21
 
                 if (!clientReachabletemp && value)
                 {
-                    Log.Logger.Debug("Ping - Client reachable");
+                    Log.Logger.Information("Z21 Client reachable via ping");
                     LogOn();
                     GetStatus();
                     ClientReachabilityChanged?.Invoke(this, clientReachable);
@@ -55,7 +56,7 @@ namespace Z21
                 }
                 else if (clientReachabletemp && !value)
                 {
-                    Log.Logger.Information("Ping - Client unreachable");
+                    Log.Logger.Warning("Z21 Client unreachable via ping");
                     ClientReachabilityChanged?.Invoke(this, clientReachable);
                     RenewClientSubscription.Enabled = false;
                 }
@@ -105,43 +106,37 @@ namespace Z21
 
         public void Connect(IPAddress clientIp)
         {
-            try
+            Log.Logger.Information($"Initialising the Z21 client.");
+            if (clientIp is null)
             {
-                if (clientIp is null)
-                {
-                    throw new NullReferenceException($"Object reference not set to an instance of an object.");
-                }
-
-                if (IsConnected)
-                {
-                    Log.Logger.Warning("Skipping connect! Client already connected. ");
-                    return;
-                }
-
-                if (OperatingSystem.IsWindows())
-                {
-                    Log.Logger.Information("Allowing NAT traversal");
-                    UdpClient.AllowNatTraversal(true);
-                }
-                Address = clientIp;
-
-                UdpClient.Connect(Address, port);
-                IsConnected = true;
-                Log.Logger.Debug($"UPD connection to {Address}:{port} established.");
-
-                UdpClient.BeginReceive(new AsyncCallback(Receiving), null);
-
-                RenewClientSubscription.Elapsed += (a, b) => GetStatus();
-                PingClient.Elapsed += PingClient_Elapsed;
-
-                PingClient.Enabled = true;
-                _ = Task.Run(async () => ClientReachable = await PingAsync());
-                Log.Logger.Information($"Z21 initialisiert.");
+                throw new NullReferenceException($"Invalid IP for the client. Can not be null!");
             }
-            catch (Exception ex)
+
+            if (IsConnected)
             {
-                Log.Logger.Error(ex, "Fehler beim connecten zur Z21.");
+                Log.Logger.Warning("Skipping connecting to Z21 client. Client already connected.");
+                return;
             }
+
+            if (OperatingSystem.IsWindows())
+            {
+                Log.Logger.Information("Z21 Client: Allowing NAT traversal");
+                UdpClient.AllowNatTraversal(true);
+            }
+            Address = clientIp;
+
+            UdpClient.Connect(Address, port);
+            IsConnected = true;
+            Log.Logger.Debug($"UPD connection to {Address}:{port} established.");
+
+            UdpClient.BeginReceive(new AsyncCallback(Receiving), null);
+
+            RenewClientSubscription.Elapsed += (a, b) => GetStatus();
+            PingClient.Elapsed += PingClient_Elapsed;
+
+            PingClient.Enabled = true;
+            _ = Task.Run(async () => ClientReachable = await PingAsync());
+            Log.Logger.Information($"Z21 client initialised.");
         }
 
         public void Dispose()
@@ -388,7 +383,7 @@ namespace Z21
                 state = TrackPower.Short;
             else if (isProgrammingModeActive)
                 state = TrackPower.Programing;
-            Log.Logger.Debug($"STATUS CHANGED \n\t{nameof(isEmergencyStop)}: {isEmergencyStop}\n\t{nameof(isTrackVoltageOff)}: {isTrackVoltageOff}\n\t{nameof(isShortCircuit)}: {isShortCircuit}\n\t{nameof(isProgrammingModeActive)}: {isProgrammingModeActive}", received);
+            Log.Logger.ForContext("data", received).Debug($"STATUS CHANGED");
             return state;
         }
 
@@ -406,7 +401,7 @@ namespace Z21
             bytes[7] = data.Adresse.ValueBytes.Adr_LSB;
             bytes[8] = (byte)data.Speed;
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            Log.Logger.Debug($"SET LOCO DRIVE: \n\tAdresse:'{data.Adresse.Value:D3}' \n\tDirection: '{data.DrivingDirection}'\t \n\tSpeed:'{data.Speed:D3}'", bytes);
+            Log.Logger.ForContext("data", bytes).Debug($"SET LOCO DRIVE");
             return bytes;
         }
 
@@ -437,7 +432,7 @@ namespace Z21
             }
             bitarray.CopyTo(bytes, 8);
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            Log.Logger.Debug($"SET LOCO FUNCTION (lokAdress: {function.LokAdresse.Value}; functionAdress: {function.FunctionAdress} - {function.ToggleType})", bytes);
+            Log.Logger.ForContext("data", bytes).Debug($"SET LOCO FUNCTION");
             return bytes;
         }
 
@@ -481,7 +476,7 @@ namespace Z21
                 else
                 {
                     z = max;
-                    Log.Logger.Debug($"Fehlerhaftes Telegramm.", bytes);
+                    Log.Logger.Error($"Bad telegram", bytes);
                 }
             }
 
@@ -495,7 +490,7 @@ namespace Z21
                 byte[] received = UdpClient.EndReceive(res, ref RemoteIpEndPoint!);
                 UdpClient.BeginReceive(new AsyncCallback(Receiving), null);
                 OnReceive?.Invoke(this, new DataEventArgs(received));
-                Log.Logger.ForContext("data", received).Debug("Received");
+                Log.Logger.ForContext("data", received).Debug("Received data from the z21.");
                 CutTelegramm(received);
             }
             catch (Exception ex)
@@ -509,7 +504,7 @@ namespace Z21
             LogOFF();
             UdpClient.Client.EndConnect(res);
             IsConnected = false;
-            Log.Logger.Information($"Reconnection abgeschlossen");
+            Log.Logger.Information($"Reconnecting completed");
         }
 
         private void Evaluation(byte[] received)
@@ -646,7 +641,7 @@ namespace Z21
                                 }
                             }
                             OnGetLocoInfo?.Invoke(this, new GetLocoInfoEventArgs(infodata));
-                            Log.Logger.Debug($"GET LOCO DRIVE: \n\tAdresse:'{infodata.Adresse.Value:D3}' \n\tDirection: '{infodata.DrivingDirection}'\n\tSpeed:'{infodata.Speed:D3}'", received);
+                            Log.Logger.ForContext("data", received).Debug($"GET LOCO DRIVE");
                             break;
                         case 0xF3:
                             switch (received[5])
@@ -675,41 +670,15 @@ namespace Z21
                     OnSystemStateDataChanged?.Invoke(this, new SystemStateEventArgs(systemStateData));
                     break;
                 default:
-                    Log.Logger.Debug($"Unbekanntes Telegramm ", received);
+                    Log.Logger.Debug($"Unknown telegram", received);
                     break;
             }
         }
 
         private async void Sending(byte[] bytes)
         {
-            try
-            {
-                if (!IsConnected)
-                {
-                    throw new InvalidOperationException("Client not connected!");
-                }
-
-                await UdpClient.SendAsync(bytes, bytes?.GetLength(0) ?? 0);
-                Log.Logger.ForContext("data", bytes).Debug("Sended");
-            }
-            catch (ArgumentNullException ex)
-            {
-                Log.Logger.Error(ex, "Fehler beim Senden. Zu sendende Bytes waren null.");
-            }
-            catch (ObjectDisposedException ex)
-            {
-                Log.Logger.Error(ex, "Fehler beim Senden. Der UdpClient ist geschlossen.");
-            }
-            catch (InvalidOperationException ex)
-            {
-                Log.Logger.Error(ex, "Fehler beim Senden. Der UdpClient hat bereits einen Standardremotehost eingerichtet.");
-            }
-            catch (Exception ex)
-            {
-                if (ex is SocketException)
-                    UdpClient.Client.BeginConnect(Address, port, new AsyncCallback(EndConnect), null);
-                Log.Logger.Error(ex, "Fehler beim Senden");
-            }
+            await UdpClient.SendAsync(bytes, bytes?.GetLength(0) ?? 0);
+            Log.Logger.ForContext("data", bytes).Debug($"Sending data to the z21");
         }
     }
 }
