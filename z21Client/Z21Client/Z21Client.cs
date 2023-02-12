@@ -499,14 +499,6 @@ namespace Z21
             }
         }
 
-        private void EndConnect(IAsyncResult res)
-        {
-            LogOFF();
-            UdpClient.Client.EndConnect(res);
-            IsConnected = false;
-            Log.Logger.Information($"Reconnecting completed");
-        }
-
         private void Evaluation(byte[] received)
         {
             int i, j;
