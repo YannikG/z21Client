@@ -127,7 +127,7 @@ namespace Z21
 
             UdpClient.Connect(Address, port);
             IsConnected = true;
-            Log.Logger.Debug($"UPD connection to {Address}:{port} established.");
+            Log.Logger.Information($"UPD connection to {Address}:{port} established.");
 
             UdpClient.BeginReceive(new AsyncCallback(Receiving), null);
 
@@ -157,7 +157,7 @@ namespace Z21
             bytes[4] = 0xF1;
             bytes[5] = 0x0A;
             bytes[6] = 0xFB;
-            Log.Logger.ForContext("data", bytes).Debug($"GET FIRMWARE VERSION");
+            Log.Logger.ForContext("data", bytes).Information($"GET FIRMWARE VERSION");
             Sending(bytes);
         }
 
@@ -168,7 +168,7 @@ namespace Z21
             bytes[1] = 0;
             bytes[2] = 0x1A;
             bytes[3] = 0;
-            Log.Logger.ForContext("data", bytes).Debug($"GET HWINFO");
+            Log.Logger.ForContext("data", bytes).Information($"GET HWINFO");
             Sending(bytes);
         }
 
@@ -179,7 +179,7 @@ namespace Z21
             bytes[1] = 0x00;
             bytes[2] = 0x18;
             bytes[3] = 0x00;
-            Log.Logger.ForContext("data", bytes).Debug($"GET LAN CODE");
+            Log.Logger.ForContext("data", bytes).Information($"GET LAN CODE");
             Sending(bytes);
         }
 
@@ -196,7 +196,7 @@ namespace Z21
             bytes[6] = adresse.ValueBytes.Adr_MSB;
             bytes[7] = adresse.ValueBytes.Adr_LSB;
             bytes[8] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7]);
-            Log.Logger.ForContext("data", bytes).Debug($"GET LOCO INFO  (#{adresse.Value})");
+            Log.Logger.ForContext("data", bytes).Information($"GET LOCO INFO  (#{adresse.Value})");
             Sending(bytes);
         }
 
@@ -207,7 +207,7 @@ namespace Z21
             bytes[1] = 0;
             bytes[2] = 0x10;
             bytes[3] = 0;
-            Log.Logger.ForContext("data", bytes).Debug($"GET SERIAL NUMBER");
+            Log.Logger.ForContext("data", bytes).Information($"GET SERIAL NUMBER");
             Sending(bytes);
         }
 
@@ -221,7 +221,7 @@ namespace Z21
             bytes[4] = 0x21;
             bytes[5] = 0x24;
             bytes[6] = 0x05;
-            Log.Logger.ForContext("data", bytes).Debug($"GET STATUS");
+            Log.Logger.ForContext("data", bytes).Information($"GET STATUS");
             Sending(bytes);
         }
 
@@ -236,7 +236,7 @@ namespace Z21
             bytes[5] = 0x21;
             //bytes[6] = 0x47;   // = XOR-Byte  selbst ausgerechnet, in der LAN-Doku steht 0 ?!
             bytes[6] = 0;
-            Log.Logger.ForContext("data", bytes).Debug($"GET VERSION");
+            Log.Logger.ForContext("data", bytes).Information($"GET VERSION");
             Sending(bytes);
         }
 
@@ -247,7 +247,7 @@ namespace Z21
             bytes[1] = 0x00;
             bytes[2] = 0x30;
             bytes[3] = 0x00;
-            Log.Logger.Debug("LOG OFF", bytes);
+            Log.Logger.Information("LOG OFF", bytes);
             Sending(bytes);
         }
 
@@ -263,7 +263,7 @@ namespace Z21
             bytes[5] = flags[1];
             bytes[6] = flags[2];
             bytes[7] = flags[3];
-            Log.Logger.ForContext("data", bytes).Debug($"SET BROADCASTFLAGS");
+            Log.Logger.ForContext("data", bytes).Information($"SET BROADCASTFLAGS");
             Sending(bytes);
         }
 
@@ -327,7 +327,7 @@ namespace Z21
             bytes[3] = 0;
             bytes[4] = 0x80;
             bytes[5] = 0x80;
-            Log.Logger.ForContext("data", bytes).Debug($"SET STOP");
+            Log.Logger.ForContext("data", bytes).Information($"SET STOP");
             Sending(bytes);
         }
 
@@ -342,7 +342,7 @@ namespace Z21
             bytes[5] = 0x80;
             bytes[6] = 0xA1;
             Sending(bytes);
-            Log.Logger.ForContext("data", bytes).Debug($"SET TRACK POWER OFF");
+            Log.Logger.ForContext("data", bytes).Information($"SET TRACK POWER OFF");
         }
 
         public void SetTrackPowerON()
@@ -355,7 +355,7 @@ namespace Z21
             bytes[4] = 0x21;
             bytes[5] = 0x81;
             bytes[6] = 0xA0;
-            Log.Logger.ForContext("data", bytes).Debug($"SET TRACK POWER ON");
+            Log.Logger.ForContext("data", bytes).Information($"SET TRACK POWER ON");
             Sending(bytes);
         }
 
@@ -366,7 +366,7 @@ namespace Z21
             bytes[1] = 0;
             bytes[2] = 0x85;
             bytes[3] = 0;
-            Log.Logger.ForContext("data", bytes).Debug($"SYSTEMSTATE GETDATA");
+            Log.Logger.ForContext("data", bytes).Information($"SYSTEMSTATE GETDATA");
             Sending(bytes);
         }
 
@@ -383,7 +383,7 @@ namespace Z21
                 state = TrackPower.Short;
             else if (isProgrammingModeActive)
                 state = TrackPower.Programing;
-            Log.Logger.ForContext("data", received).Debug($"STATUS CHANGED");
+            Log.Logger.ForContext("data", received).Information($"STATUS CHANGED");
             return state;
         }
 
@@ -401,7 +401,7 @@ namespace Z21
             bytes[7] = data.Adresse.ValueBytes.Adr_LSB;
             bytes[8] = (byte)data.Speed;
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            Log.Logger.ForContext("data", bytes).Debug($"SET LOCO DRIVE");
+            Log.Logger.ForContext("data", bytes).Information($"SET LOCO DRIVE");
             return bytes;
         }
 
@@ -432,7 +432,7 @@ namespace Z21
             }
             bitarray.CopyTo(bytes, 8);
             bytes[9] = (byte)(bytes[4] ^ bytes[5] ^ bytes[6] ^ bytes[7] ^ bytes[8]);
-            Log.Logger.ForContext("data", bytes).Debug($"SET LOCO FUNCTION");
+            Log.Logger.ForContext("data", bytes).Information($"SET LOCO FUNCTION");
             return bytes;
         }
 
@@ -514,7 +514,7 @@ namespace Z21
             switch (received[2])
             {
                 case 0x1A:
-                    Log.Logger.Debug($"GET HWINFO ", received);
+                    Log.Logger.Information($"GET HWINFO ", received);
                     i = (received[7] << 24) + (received[6] << 16) + (received[5] << 8) + received[4];
                     j = (received[11] << 24) + (received[10] << 16) + (received[9] << 8) + received[8];
                     var hardwareTyp = i switch
@@ -528,7 +528,7 @@ namespace Z21
                     OnGetHardwareInfo?.Invoke(this, new HardwareInfoEventArgs(new HardwareInfo(hardwareTyp, j)));
                     break;
                 case 0x10:
-                    Log.Logger.Debug($"GET SERIAL NUMBER ", received);
+                    Log.Logger.Information($"GET SERIAL NUMBER ", received);
                     i = (received[7] << 24) + (received[6] << 16) + (received[5] << 8) + received[4];
                     OnGetSerialNumber?.Invoke(this, new GetSerialNumberEventArgs(i));
                     break;
@@ -542,7 +542,7 @@ namespace Z21
                         }
                         else
                         {
-                            Log.Logger.Warning($"GET LAN CODE '{code}'", received);
+                            Log.Logger.Information($"GET LAN CODE '{code}'", received);
                         }
                         OnGetLanCode?.Invoke(this, code);
                     }
@@ -558,23 +558,23 @@ namespace Z21
                             switch (received[5])
                             {
                                 case 0x00:
-                                    Log.Logger.Debug($"TRACK POWER OFF ", received);
+                                    Log.Logger.Information($"TRACK POWER OFF ", received);
                                     TrackPowerChanged?.Invoke(this, new(TrackPower.OFF));
                                     break;
                                 case 0x01:
-                                    Log.Logger.Debug($"TRACK POWER ON ", received);
+                                    Log.Logger.Information($"TRACK POWER ON ", received);
                                     TrackPowerChanged?.Invoke(this, new(TrackPower.ON));
                                     break;
                                 case 0x02:
-                                    Log.Logger.Debug($"PROGRAMMING MODE ", received);
+                                    Log.Logger.Information($"PROGRAMMING MODE ", received);
                                     TrackPowerChanged?.Invoke(this, new(TrackPower.Programing));
                                     break;
                                 case 0x08:
-                                    Log.Logger.Debug($"TRACK SHORT CIRCUIT ", received);
+                                    Log.Logger.Information($"TRACK SHORT CIRCUIT ", received);
                                     TrackPowerChanged?.Invoke(this, new(TrackPower.Short));
                                     break;
                                 default:
-                                    Log.Logger.Debug($"Unbekanntes X-Bus-Telegramm Header 61", received);
+                                    Log.Logger.Warning($"Unbekanntes X-Bus-Telegramm Header 61", received);
                                     break;
                             }
                             break;
@@ -585,7 +585,7 @@ namespace Z21
                             switch (received[5])
                             {
                                 case 0x21:           //  LAN X GET VERSION  2.3 (10)
-                                    Log.Logger.Debug($"GET VERSION ", received);
+                                    Log.Logger.Information($"GET VERSION ", received);
                                     var versionTyp = received[7] switch
                                     {
                                         0x00 => VersionTyp.None,
@@ -596,13 +596,13 @@ namespace Z21
                                     OnGetVersion?.Invoke(this, new VersionInfoEventArgs(new VersionInfo(received[6], versionTyp)));
                                     break;
                                 default:
-                                    Log.Logger.Debug($"Unbekanntes X-Bus-Telegramm Header 63", received);
+                                    Log.Logger.Warning($"Unbekanntes X-Bus-Telegramm Header 63", received);
                                     break;
                             }
                             break;
 
                         case 0x81:           //  LAN X BC STOPPED  2.14 (14)
-                            Log.Logger.Debug($"BC STOPPED ", received);
+                            Log.Logger.Information($"BC STOPPED ", received);
                             OnStopped?.Invoke(this, new EventArgs());
                             break;
                         case 0xEF:           //  LAN X LOCO INFO  4.4 (22)
@@ -641,26 +641,23 @@ namespace Z21
                                 }
                             }
                             OnGetLocoInfo?.Invoke(this, new GetLocoInfoEventArgs(infodata));
-                            Log.Logger.ForContext("data", received).Debug($"GET LOCO DRIVE");
+                            Log.Logger.ForContext("data", received).Information($"GET LOCO DRIVE");
                             break;
                         case 0xF3:
                             switch (received[5])
                             {
                                 case 0x0A:
-                                    Log.Logger.Debug($"GET FIRMWARE VERSION ", received);
+                                    Log.Logger.Information($"GET FIRMWARE VERSION ", received);
                                     OnGetFirmwareVersion?.Invoke(this, new FirmwareVersionInfoEventArgs(new FirmwareVersionInfo(received[6], received[7])));
                                     // Achtung: die z21 bringt die Minor-Angabe hexadezimal !!!!!!!!    z.B. Firmware 1.23 = Minor 34
                                     break;
                                 default:
-                                    Log.Logger.Debug($"Unbekanntes X-Bus-Telegramm Header F3", received);
+                                    Log.Logger.Warning($"Unbekanntes X-Bus-Telegramm Header F3", received);
                                     break;
                             }
                             break;
-                        case 0x82:
-                            Log.Logger.Error($"UNKNOWN COMMAND");
-                            break;
                         default:
-                            Log.Logger.Debug($"Unbekanntes X-Bus-Telegramm ", received);
+                            Log.Logger.Warning($"Unbekanntes X-Bus-Telegramm ", received);
                             break;
                     }
                     break;
@@ -670,7 +667,7 @@ namespace Z21
                     OnSystemStateDataChanged?.Invoke(this, new SystemStateEventArgs(systemStateData));
                     break;
                 default:
-                    Log.Logger.Debug($"Unknown telegram", received);
+                    Log.Logger.Warning($"Unknown telegram", received);
                     break;
             }
         }
