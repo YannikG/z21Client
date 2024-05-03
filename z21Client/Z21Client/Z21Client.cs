@@ -278,7 +278,7 @@ namespace Z21
             return result.Status == System.Net.NetworkInformation.IPStatus.Success;
         }
 
-        private async void PingClient_Elapsed(object sender, ElapsedEventArgs e)
+        private async void PingClient_Elapsed(object? sender, ElapsedEventArgs e)
         {
             PingClient.Enabled = false;
             try
@@ -666,8 +666,8 @@ namespace Z21
 
         private async void Sending(byte[] bytes)
         {
-            await UdpClient.SendAsync(bytes, bytes?.GetLength(0) ?? 0);
-            Log.Logger.ForContext("data", bytes).Debug($"Sending data to the z21: {BitConverter.ToString(bytes)}");
+            await UdpClient.SendAsync(bytes ?? [], bytes?.GetLength(0) ?? 0);
+            Log.Logger.ForContext("data", bytes).Debug($"Sending data to the z21: {BitConverter.ToString(bytes ?? [])}");
         }
     }
 }
