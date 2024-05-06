@@ -124,7 +124,6 @@ namespace Z21
                 UdpClient.AllowNatTraversal(true);
             }
             Address = clientIp;
-
             UdpClient.Connect(Address, port);
             IsConnected = true;
             Log.Logger.Information($"UPD connection to {Address}:{port} established.");
