@@ -22,19 +22,51 @@ namespace Z21
 {
     public class Z21Communicator(int port) : UdpClient(port), IZ21Communicator
     {
+        /// <summary>
+        /// Enables or disables Network Address Translation (NAT) traversal on a System.Net.Sockets.UdpClient instance.
+        /// </summary>
+        /// <param name="allowed">A Boolean value that specifies whether to enable or disable NAT traversal.</param>
         [SupportedOSPlatform("windows")]
-        public new void AllowNatTraversal(bool v) => base.AllowNatTraversal(v);
+        public new void AllowNatTraversal(bool allowed) => base.AllowNatTraversal(allowed);
 
-        public new void BeginReceive(AsyncCallback asyncCallback, object value) => base.BeginReceive(asyncCallback, value);
+        /// <summary>
+        /// Receives a datagram from a remote host asynchronously.
+        /// </summary>
+        /// <param name="asyncCallback">An System.AsyncCallback delegate that references the method to invoke when the operation is complete.</param>
+        /// <param name="state">A user-defined object that contains information about the receive operation.This object is passed to the requestCallback delegate when the operation is complete.</param>
+        public new void BeginReceive(AsyncCallback asyncCallback, object state) => base.BeginReceive(asyncCallback, state);
 
+        /// <summary>
+        /// Closes the UDP connection.
+        /// </summary>
         public new void Close() => base.Close();
 
+        /// <summary>
+        /// Establishes a default remote host using the specified IP address and port number.
+        /// </summary>
+        /// <param name="address">The System.Net.IPAddress of the remote host to which you intend to send data.</param>
+        /// <param name="port">The port number to which you intend send data.</param>
         public new void Connect(IPAddress address, int port) => base.Connect(address, port);
 
+        /// <summary>
+        /// Releases the managed and unmanaged resources used by the System.Net.Sockets.UdpClient.
+        /// </summary>
         public new void Dispose() => base.Dispose();
 
-        public new byte[] EndReceive(IAsyncResult res, ref IPEndPoint? iPEndPoint) => base.EndReceive(res, ref iPEndPoint);
+        /// <summary>
+        /// Ends a pending asynchronous receive.
+        /// </summary>
+        /// <param name="asyncResult">An System.IAsyncResult object returned by a call to System.Net.Sockets.UdpClient.BeginReceive(System.AsyncCallback,System.Object).</param>
+        /// <param name="remoteEP">The specified remote endpoint.</param>
+        /// <returns>If successful, an array of bytes that contains datagram data.</returns>
+        public new byte[] EndReceive(IAsyncResult asyncResult, ref IPEndPoint? remoteEP) => base.EndReceive(asyncResult, ref remoteEP);
 
+        /// <summary>
+        /// Sends a UDP datagram asynchronously to a remote host.
+        /// </summary>
+        /// <param name="datagram">An array of type System.Byte that specifies the UDP datagram that you intend to send represented as an array of bytes.</param>
+        /// <param name="bytes">The number of bytes in the datagram.</param>
+        /// <returns>Returns System.Threading.Tasks.Task.</returns>
         public new async Task<int> SendAsync(byte[] datagram, int bytes) => await base.SendAsync(datagram, bytes);
     }
 }
