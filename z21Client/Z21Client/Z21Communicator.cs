@@ -16,6 +16,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Versioning;
+using System.Threading.Tasks;
 
 namespace Z21
 {
@@ -33,5 +34,7 @@ namespace Z21
         void IZ21Communicator.Dispose() => base.Dispose();
 
         byte[] IZ21Communicator.EndReceive(IAsyncResult res, ref IPEndPoint? iPEndPoint) => base.EndReceive(res, ref iPEndPoint);
+
+        async Task<int> IZ21Communicator.SendAsync(byte[] datagram, int bytes) => await base.SendAsync(datagram, bytes);
     }
 }

@@ -14,6 +14,7 @@
 
 using System;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Z21
 {
@@ -30,5 +31,8 @@ namespace Z21
         void Dispose();
 
         byte[] EndReceive(IAsyncResult res, ref IPEndPoint? iPEndPoint);
+
+        Task<int> SendAsync(byte[] datagram, int bytes);
+
     }
 }
