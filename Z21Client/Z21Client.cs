@@ -65,11 +65,6 @@ namespace Z21
             }
         }
 
-        public Client()
-        {
-            Z21Communicator = new Z21Communicator(port);
-        }
-
         public event EventHandler<FirmwareVersionInfoEventArgs> OnGetFirmwareVersion = default!;
 
         public event EventHandler<HardwareInfoEventArgs> OnGetHardwareInfo = default!;
@@ -94,7 +89,7 @@ namespace Z21
 
         public event EventHandler<bool> ClientReachabilityChanged = default!;
 
-        private IZ21Communicator Z21Communicator { get; }
+        private IZ21Communicator Z21Communicator { get; } = new Z21Communicator(port);
 
         public IPAddress Address { get; private set; } = default!;
 
@@ -134,7 +129,7 @@ namespace Z21
             PingClient.Elapsed += PingClient_Elapsed;
             PingClient.Enabled = true;
             _ = Task.Run(async () => ClientReachable = await PingAsync());
-           
+
             Log.Logger.Information($"Z21 client initialised.");
         }
 

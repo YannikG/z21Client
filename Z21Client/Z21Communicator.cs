@@ -23,18 +23,18 @@ namespace Z21
     public class Z21Communicator(int port) : UdpClient(port), IZ21Communicator
     {
         [SupportedOSPlatform("windows")]
-        void IZ21Communicator.AllowNatTraversal(bool v) => base.AllowNatTraversal(v);
+        public new void AllowNatTraversal(bool v) => base.AllowNatTraversal(v);
 
-        void IZ21Communicator.BeginReceive(AsyncCallback asyncCallback, object value) => base.BeginReceive(asyncCallback, value);
+        public new void BeginReceive(AsyncCallback asyncCallback, object value) => base.BeginReceive(asyncCallback, value);
 
-        void IZ21Communicator.Close() => base.Close();
+        public new void Close() => base.Close();
 
-        void IZ21Communicator.Connect(IPAddress address, int port) => base.Connect(address, port);
+        public new void Connect(IPAddress address, int port) => base.Connect(address, port);
 
-        void IZ21Communicator.Dispose() => base.Dispose();
+        public new void Dispose() => base.Dispose();
 
-        byte[] IZ21Communicator.EndReceive(IAsyncResult res, ref IPEndPoint? iPEndPoint) => base.EndReceive(res, ref iPEndPoint);
+        public new byte[] EndReceive(IAsyncResult res, ref IPEndPoint? iPEndPoint) => base.EndReceive(res, ref iPEndPoint);
 
-        async Task<int> IZ21Communicator.SendAsync(byte[] datagram, int bytes) => await base.SendAsync(datagram, bytes);
+        public new async Task<int> SendAsync(byte[] datagram, int bytes) => await base.SendAsync(datagram, bytes);
     }
 }
