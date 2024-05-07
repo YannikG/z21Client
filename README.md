@@ -1,5 +1,4 @@
-#Z21
-===
+# Z21 [![](https://github.com/Jakob-Eichberger/z21Client/actions/workflows/dotnet.yml/badge.svg?branch=master)](https://github.com/Jakob-Eichberger/z21Client/actions/workflows/dotnet.yml)
 
 z21Client is a lightweight C# client that facilitates communication with the digital control center z21/Z21 from Roco/Fleischmann. 
 
@@ -10,7 +9,3 @@ The basis for this implementation is the publicly available [`z21-lan-protokoll`
 Since this client partially implements the z21 protocol, only the following features are currently available:
 
 - TBD
-
-## Dependencies
-
-This implementation only uses features from the '.NetCore Framework' and does not rely on external dependencies. 
