@@ -6,7 +6,6 @@ The **Z21 client** library is a C# library for interfacing with the Roco and Fle
 
 - **Train Control**: Send commands to control locomotives, set speed, direction, and read locomotive status.
 - **Function Control**: Activate and deactivate functions (lights, sound, etc.) on locomotives.
-- **Import Database**: Import your Z21 (new) smartphone app data for an easy starting experience.
 - **Signal/Switch Control (Planned)**: Future enhancements will include support for controlling signals and switches on your layout.
 
 ## Getting Started
