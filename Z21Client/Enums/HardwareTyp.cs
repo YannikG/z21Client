@@ -20,6 +20,13 @@ namespace Z21.Enums
         Z21New,
         SmartRail,
         z21Small,
+        z21Start,
+        SingleBooster,
+        DualBooster,
+        Z21XL,
+        XLBooster,
+        Z21SwitchDecoder,
+        Z21SignalDecoder,
         None
     };
 }

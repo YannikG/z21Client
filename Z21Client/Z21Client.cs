@@ -499,7 +499,7 @@ namespace Z21
 
             switch (received[2])
             {
-                case 0x1A:
+                case 0x1A: // LAN GET HWINFO 2.20 (19)
                     Log.Logger.Information($"GET HWINFO ", received);
                     i = (received[7] << 24) + (received[6] << 16) + (received[5] << 8) + received[4];
                     j = (received[11] << 24) + (received[10] << 16) + (received[9] << 8) + received[8];
@@ -509,6 +509,13 @@ namespace Z21
                         0x00000201 => HardwareTyp.Z21New,
                         0x00000202 => HardwareTyp.SmartRail,
                         0x00000203 => HardwareTyp.z21Small,
+                        0x00000204 => HardwareTyp.z21Start,
+                        0x00000205 => HardwareTyp.SingleBooster,
+                        0x00000206 => HardwareTyp.DualBooster,
+                        0x00000211 => HardwareTyp.Z21XL,
+                        0x00000212 => HardwareTyp.XLBooster,
+                        0x00000301 => HardwareTyp.Z21SwitchDecoder,
+                        0x00000302 => HardwareTyp.Z21SignalDecoder,
                         _ => HardwareTyp.None,
                     };
                     OnGetHardwareInfo?.Invoke(this, new HardwareInfoEventArgs(new HardwareInfo(hardwareTyp, j)));
