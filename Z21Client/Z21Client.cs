@@ -89,7 +89,7 @@ namespace Z21
 
         public event EventHandler<bool> ClientReachabilityChanged = default!;
 
-        private IZ21Communicator Z21Communicator { get; } = new Z21Communicator(port);
+        private IZ21Communicator Z21Communicator { get; }
 
         public IPAddress Address { get; private set; } = default!;
 
@@ -99,6 +99,16 @@ namespace Z21
 
         private Timer PingClient { get; } = new Timer() { AutoReset = true, Enabled = false, Interval = new TimeSpan(0, 0, 5).TotalMilliseconds, };
 
+        public Client()
+        {
+            Z21Communicator = new Z21Communicator(port);
+        }
+
+        public Client(IZ21Communicator communicator)
+        {
+            Z21Communicator = communicator;
+        }
+        
         public void Connect(IPAddress clientIp)
         {
             Log.Logger.Information($"Initialising the Z21 client.");
@@ -476,7 +486,7 @@ namespace Z21
 
         }
 
-        private void Receiving(IAsyncResult res)
+        public void Receiving(IAsyncResult res)
         {
             try
             {
